@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskTonic</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-flask"></i>
+        <h1>TickDone!</h1>
+      </div>
+      <div class="toggle-theme">
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <aside class="sidebar">
+        <div class="user-profile">
+          <div class="avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="productivity-score">
+            <span id="productivity-score">0</span>
+            <small>Productivity Score</small>
+          </div>
+        </div>
+
+        <nav class="filters">
+          <h3>Views</h3>
+          <ul>
+            <li data-filter="all" class="active"><i class="fas fa-tasks"></i> All Tasks</li>
+            <li data-filter="today"><i class="fas fa-calendar-day"></i> Today</li>
+            <li data-filter="active"><i class="fas fa-play"></i> Active</li>
+            <li data-filter="completed"><i class="fas fa-check-circle"></i> Completed</li>
+          </ul>
+
+          <h3>Energy</h3>
+          <ul>
+            <li data-filter="energizing"><i class="fas fa-bolt"></i> Energizing</li>
+            <li data-filter="neutral"><i class="fas fa-minus"></i> Neutral</li>
+            <li data-filter="draining"><i class="fas fa-battery-quarter"></i> Draining</li>
+          </ul>
+
+          <h3>Tags</h3>
+          <div id="tags-list" class="tags-list">
+            <!-- Tags will be dynamically added here -->
+          </div>
+          <div class="add-tag">
+            <input type="text" id="new-tag-input" placeholder="New tag...">
+            <button id="add-tag-btn"><i class="fas fa-plus"></i></button>
+          </div>
+        </nav>
+
+        <div class="statistics">
+          <h3>Statistics</h3>
+          <div class="stat-item">
+            <span>Completed today:</span>
+            <span id="completed-today">0</span>
+          </div>
+          <div class="stat-item">
+            <span>Completion rate:</span>
+            <span id="completion-rate">0%</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="content">
+        <div id="mood-booster" class="mood-booster">
+          <i class="fas fa-lightbulb"></i>
+          <p>Loading your personalized insights...</p>
+        </div>
+
+        <div class="quick-add">
+          <input type="text" id="quick-task-input" placeholder="Quick add task...">
+          <button id="quick-add-btn"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <div class="task-form-container">
+          <button id="show-task-form" class="btn-primary">
+            <i class="fas fa-plus"></i> New Task
+          </button>
+          
+          <form id="task-form" class="hidden">
+            <div class="form-row">
+              <input type="text" id="task-input" placeholder="What needs to be done?" required>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label>Energy Impact</label>
+                <select id="mood-select">
+                  <option value="energizing">😊 Energizing</option>
+                  <option value="neutral" selected>😐 Neutral</option>
+                  <option value="draining">😩 Draining</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label>Priority</label>
+                <select id="priority-select">
+                  <option value="0">Low</option>
+                  <option value="1" selected>Medium</option>
+                  <option value="2">High</option>
+                  <option value="3">Urgent</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" id="due-date">
+              </div>
+              
+              <div class="form-group">
+                <label>Tags</label>
+                <div class="tags-input-container">
+                  <div id="selected-tags" class="selected-tags"></div>
+                  <select id="tags-select" multiple>
+                    <!-- Tags will be added dynamically -->
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <textarea id="notes-input" placeholder="Additional notes (optional)"></textarea>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" id="cancel-task">Cancel</button>
+              <button type="submit" class="btn-primary">Add Task</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="list-controls">
+          <div class="view-options">
+            <button class="active" data-view="list"><i class="fas fa-list"></i></button>
+            <button data-view="board"><i class="fas fa-columns"></i></button>
+          </div>
+          <div class="sort-options">
+            <select id="sort-select">
+              <option value="priority">Sort by Priority</option>
+              <option value="date">Sort by Date</option>
+              <option value="energy">Sort by Energy</option>
+            </select>
+          </div>
+          <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search tasks...">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+
+        <div id="task-list" class="task-list"></div>
+        
+        <div id="task-board" class="task-board hidden">
+          <div class="board-column" data-status="todo">
+            <h3>To Do</h3>
+            <div class="board-tasks"></div>
+          </div>
+          <div class="board-column" data-status="inprogress">
+            <h3>In Progress</h3>
+            <div class="board-tasks"></div>
+          </div>
+          <div class="board-column" data-status="done">
+            <h3>Done</h3>
+            <div class="board-tasks"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Detail Modal -->
+  <div id="task-detail-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Task Details</h2>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="task-edit-form">
+          <input type="hidden" id="edit-task-id">
+          <div class="form-row">
+            <input type="text" id="edit-task-text" placeholder="Task description" required>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Energy Impact</label>
+              <select id="edit-mood-select">
+                <option value="energizing">😊 Energizing</option>
+                <option value="neutral">😐 Neutral</option>
+                <option value="draining">😩 Draining</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Priority</label>
+              <select id="edit-priority-select">
+                <option value="0">Low</option>
+                <option value="1">Medium</option>
+                <option value="2">High</option>
+                <option value="3">Urgent</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Due Date</label>
+              <input type="date" id="edit-due-date">
+            </div>
+            
+            <div class="form-group">
+              <label>Status</label>
+              <select id="edit-status-select">
+                <option value="todo">To Do</option>
+                <option value="inprogress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label>Tags</label>
+              <div class="tags-input-container">
+                <div id="edit-selected-tags" class="selected-tags"></div>
+                <select id="edit-tags-select" multiple>
+                  <!-- Tags will be added dynamically -->
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <textarea id="edit-notes-input" placeholder="Additional notes"></textarea>
+          </div>
+          
+          <div class="task-metadata">
+            <div>Created: <span id="created-date"></span></div>
+            <div id="completed-date-container">Completed: <span id="completed-date"></span></div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="delete-task-btn" class="btn-danger">Delete</button>
+            <button type="submit" class="btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pomodoro Timer Modal -->
+  <div id="pomodoro-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Pomodoro Timer</h2>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="timer-display">
+          <div id="timer-time">25:00</div>
+          <div id="timer-task-name">Select a task to focus on</div>
+        </div>
+        
+        <div class="timer-controls">
+          <button id="timer-start" class="btn-primary"><i class="fas fa-play"></i> Start</button>
+          <button id="timer-pause" class="btn-secondary hidden"><i class="fas fa-pause"></i> Pause</button>
+          <button id="timer-reset" class="btn-secondary"><i class="fas fa-redo"></i> Reset</button>
+        </div>
+        
+        <div class="timer-settings">
+          <div class="form-group">
+            <label>Work Time (minutes)</label>
+            <input type="number" id="work-time" value="25" min="1" max="60">
+          </div>
+          <div class="form-group">
+            <label>Break Time (minutes)</label>
+            <input type="number" id="break-time" value="5" min="1" max="30">
+          </div>
+          <div class="form-group">
+            <label>Long Break Time (minutes)</label>
+            <input type="number" id="long-break-time" value="15" min="1" max="60">
+          </div>
+          <div class="form-group">
+            <label>Sessions until long break</label>
+            <input type="number" id="sessions-count" value="4" min="1" max="10">
+          </div>
+        </div>
+        
+        <div class="session-progress">
+          <div id="session-indicators" class="session-indicators"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
